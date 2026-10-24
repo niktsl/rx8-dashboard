@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -39,17 +40,23 @@ fun RotorEmblem(rpm: Double?, modifier: Modifier = Modifier, tint: Color = Local
         var last = 0L
         while (true) {
             withFrameNanos { now ->
-                if (last != 0L) {
+                if (last == 0L) {
+                    last = now
+                } else {
                     val dt = (now - last) / 1_000_000_000f
-                    val r = rpmNow.toFloat()
-                    val degPerSec = if (r <= 0f) 0f else 30f + (r / 9000f).coerceAtMost(1.2f) * 240f
-                    angle = (angle + degPerSec * dt) % 360f
+                    // Update at about 30 fps: the rotor does not need every vsync, and redraws are costly on slow GPUs.
+                    if (dt >= 0.033f) {
+                        val r = rpmNow.toFloat()
+                        val degPerSec = if (r <= 0f) 0f else 30f + (r / 9000f).coerceAtMost(1.2f) * 240f
+                        angle = (angle + degPerSec * dt) % 360f
+                        last = now
+                    }
                 }
-                last = now
             }
         }
     }
-    Canvas(modifier = modifier) { drawRotorEngine(angle, tint) }
+    // Own graphics layer so the per-frame redraw does not invalidate the rest of the screen.
+    Canvas(modifier = modifier.graphicsLayer { }) { drawRotorEngine(angle, tint) }
 }
 
 private fun DrawScope.drawRotorEngine(angleDeg: Float, tint: Color) {
