@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Framework theme only: the app has no appcompat / material-components dependency. Compose draws everything. -->
+    <style name="Theme.Rx8Dash" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/rx8_black</item>
+        <item name="android:colorBackground">@color/rx8_black</item>
+        <item name="android:colorPrimary">@color/rx8_red</item>
+        <item name="android:colorAccent">@color/rx8_red</item>
+        <item name="android:statusBarColor">@color/rx8_black</item>
+        <item name="android:navigationBarColor">@color/rx8_black</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+</resources>
