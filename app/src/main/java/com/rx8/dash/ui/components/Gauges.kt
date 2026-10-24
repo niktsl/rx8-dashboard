@@ -82,6 +82,7 @@ fun TachometerGauge(
     val overRed = rpm != null && rpm >= redlineRpm
 
     Box(modifier = modifier.aspectRatio(1f), contentAlignment = Alignment.Center) {
+        RotorEmblem(rpm = rpm, modifier = Modifier.fillMaxSize(0.56f))
         Canvas(modifier = Modifier.fillMaxSize()) {
             val d = min(size.width, size.height)
             val stroke = d * 0.06f
@@ -165,7 +166,7 @@ fun TachometerGauge(
         ) {
             Text(
                 text = Fmt.int(rpm),
-                style = MaterialTheme.typography.displayMedium,
+                style = MaterialTheme.typography.displayMedium.copy(fontSize = 34.sp),
                 color = if (overRed) c.redline else c.text,
             )
             Text(text = caption ?: "rpm", color = c.textDim, fontSize = 16.sp)
@@ -173,7 +174,19 @@ fun TachometerGauge(
     }
 }
 
-/** Small 270° arc gauge for one metric. Shows "NO ECU PID" when the ECU does not report it. */
+/** True when [value] is in a range worth flagging in red (high speed, hot coolant, bad battery voltage). */
+private fun isDanger(metric: Metric, value: Double, frac: Float): Boolean = when (metric) {
+    Metric.COOLANT -> value >= 105.0
+    Metric.INTAKE_AIR -> value >= 60.0
+    Metric.VOLTAGE -> value < 12.0 || value > 15.0
+    Metric.SPEED, Metric.RPM, Metric.THROTTLE, Metric.LOAD, Metric.FUEL_FLOW -> frac >= 0.9f
+    else -> false
+}
+
+/**
+ * Small 270° ring gauge for one metric: value and unit inside the ring, label underneath. The fill is blue and turns
+ * red in the danger range. Shows "NO ECU PID" when the ECU does not report the metric.
+ */
 @Composable
 fun ArcGauge(
     metric: Metric,
@@ -185,31 +198,46 @@ fun ArcGauge(
     val c = LocalDashColors.current
     val target = if (value == null) 0f else fraction(value, metric.min, metric.max)
     val animated by animateFloatAsState(targetValue = target, animationSpec = tween(200), label = "arc")
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Canvas(modifier = Modifier.fillMaxSize().padding(6.dp)) {
-            val d = min(size.width, size.height)
-            val stroke = d * 0.08f
-            val arcSize = Size(d - stroke, d - stroke)
-            val topLeft = Offset((size.width - arcSize.width) / 2f, (size.height - arcSize.height) / 2f)
-            drawArc(c.gaugeTrack, START_ANGLE, SWEEP, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
-            if (supported && value != null) {
-                drawArc(c.gaugeFill, START_ANGLE, SWEEP * animated, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
+    val danger = supported && value != null && isDanger(metric, value, target)
+    val fill = if (danger) c.redline else c.gaugeFill
+    Column(
+        modifier = modifier.padding(horizontal = 6.dp, vertical = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val d = min(size.width, size.height)
+                val stroke = d * 0.09f
+                val arcSize = Size(d - stroke, d - stroke)
+                val topLeft = Offset((size.width - arcSize.width) / 2f, (size.height - arcSize.height) / 2f)
+                drawArc(c.gaugeTrack, START_ANGLE, SWEEP, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
+                if (supported && value != null && animated > 0.005f) {
+                    drawArc(fill.copy(alpha = 0.25f), START_ANGLE, SWEEP * animated, false, topLeft, arcSize, style = Stroke(stroke * 1.7f, cap = StrokeCap.Round))
+                    drawArc(fill, START_ANGLE, SWEEP * animated, false, topLeft, arcSize, style = Stroke(stroke, cap = StrokeCap.Round))
+                }
             }
-        }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             if (!supported) {
-                Text("NO ECU PID", color = c.textDim, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text("NO ECU PID", color = c.textDim, fontWeight = FontWeight.Bold, fontSize = 13.sp, textAlign = TextAlign.Center)
             } else {
-                Text(
-                    text = Fmt.value(metric, value) + if (lowConfidence) "*" else "",
-                    style = MaterialTheme.typography.displaySmall,
-                    color = c.text,
-                    maxLines = 1,
-                )
-                if (metric.unit.isNotEmpty()) Text(metric.unit, color = c.textDim, fontSize = 14.sp)
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = Fmt.value(metric, value) + if (lowConfidence) "*" else "",
+                        style = MaterialTheme.typography.displaySmall.copy(fontSize = 26.sp),
+                        color = if (danger) c.redline else c.text,
+                        maxLines = 1,
+                    )
+                    if (metric.unit.isNotEmpty()) Text(metric.unit, color = c.textDim, fontSize = 12.sp, maxLines = 1)
+                }
             }
-            Text(metric.label, color = c.textDim, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
+        Text(
+            text = metric.label.uppercase(),
+            color = c.textDim,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 

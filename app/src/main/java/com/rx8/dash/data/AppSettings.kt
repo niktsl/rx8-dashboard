@@ -11,6 +11,7 @@ enum class KnobAction { NEXT, PREVIOUS, SELECT, BACK, NONE }
 
 /** Dashboard colour schemes. */
 enum class DashboardPalette(val label: String) {
+    AURORA_BLUE("Aurora blue"),
     RENESIS_RED("Renesis red"),
     NIGHT_AMBER("Night amber"),
     CLASSIC_WHITE("Classic white"),
@@ -43,7 +44,7 @@ data class AppSettings(
     val fuelDensity: Double = FuelConfig.DEFAULT_DENSITY_G_PER_L,
     val fuelCalibration: Double = 1.0,
     // Display
-    val palette: DashboardPalette = DashboardPalette.RENESIS_RED,
+    val palette: DashboardPalette = DashboardPalette.AURORA_BLUE,
     val gaugeSlots: List<Metric> = DEFAULT_GAUGE_SLOTS,
     // Connection timing
     val initialConnectDelayMs: Long = 3000L,
@@ -139,7 +140,7 @@ object SettingsCodec {
     fun decodeSeries(raw: String?): Rx8Series = raw?.let { enumOrNull<Rx8Series>(it) } ?: Rx8Series.S1_6PORT
 
     fun decodePalette(raw: String?): DashboardPalette =
-        raw?.let { enumOrNull<DashboardPalette>(it) } ?: DashboardPalette.RENESIS_RED
+        raw?.let { enumOrNull<DashboardPalette>(it) } ?: DashboardPalette.AURORA_BLUE
 
     private inline fun <reified E : Enum<E>> enumOrNull(name: String): E? =
         enumValues<E>().firstOrNull { it.name == name }

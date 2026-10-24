@@ -43,6 +43,24 @@ data class DashColors(
 }
 
 fun dashColorsFor(palette: DashboardPalette): DashColors = when (palette) {
+    // Blue body colour. Red is kept for redline, warnings and high values only.
+    DashboardPalette.AURORA_BLUE -> DashColors(
+        background = Color(0xFF05080F),
+        surface = Color(0xFF0E141F),
+        surfaceHigh = Color(0xFF18212F),
+        accent = Color(0xFF2F8CFF),
+        needle = Color(0xFFBFE0FF),
+        gaugeTrack = Color(0xFF1F2A3B),
+        gaugeFill = Color(0xFF3C9DFF),
+        tick = Color(0xFFA9BCD6),
+        text = Color(0xFFF1F6FF),
+        textDim = Color(0xFF7F90A8),
+        redline = Color(0xFFFF2D3A),
+        ok = Color(0xFF34C759),
+        caution = Color(0xFFFFB020),
+        warning = Color(0xFFFF3B30),
+        info = Color(0xFF6CC4FF),
+    )
     DashboardPalette.RENESIS_RED -> DashColors(
         background = Color(0xFF07080A),
         surface = Color(0xFF121418),
@@ -96,7 +114,7 @@ fun dashColorsFor(palette: DashboardPalette): DashColors = when (palette) {
     )
 }
 
-val LocalDashColors = staticCompositionLocalOf { dashColorsFor(DashboardPalette.RENESIS_RED) }
+val LocalDashColors = staticCompositionLocalOf { dashColorsFor(DashboardPalette.AURORA_BLUE) }
 
 private fun schemeFor(c: DashColors): ColorScheme = darkColorScheme(
     primary = c.accent,
@@ -135,7 +153,7 @@ private val DashTypography = Typography(
 /** Dark automotive theme. Rx8DashApp re-applies it with the palette chosen in Settings. */
 @Composable
 fun Rx8DashTheme(
-    palette: DashboardPalette = DashboardPalette.RENESIS_RED,
+    palette: DashboardPalette = DashboardPalette.AURORA_BLUE,
     content: @Composable () -> Unit,
 ) {
     val colors = dashColorsFor(palette)

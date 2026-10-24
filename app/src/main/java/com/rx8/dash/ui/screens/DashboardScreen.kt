@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -45,6 +46,7 @@ import com.rx8.dash.ui.components.ArcGauge
 import com.rx8.dash.ui.components.ConnectionChip
 import com.rx8.dash.ui.components.Fmt
 import com.rx8.dash.ui.components.MediaMiniPanel
+import com.rx8.dash.ui.components.RotorEmblem
 import com.rx8.dash.ui.components.TachometerGauge
 import com.rx8.dash.ui.components.WarningLight
 import com.rx8.dash.ui.components.focusRing
@@ -85,6 +87,8 @@ fun DashboardScreen(session: SessionViewModel, graph: AppGraph, modifier: Modifi
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            RotorEmblem(rpm = snap[Metric.RPM], modifier = Modifier.size(44.dp))
+            Text("RX-8", color = c.accent, fontWeight = FontWeight.ExtraBold, fontSize = 22.sp)
             ConnectionChip(status = status, demo = s.demoMode)
             Spacer(Modifier.weight(1f))
             if (oil != null) WarningLight(label = "OIL PRESSURE", on = oil < 0.5)

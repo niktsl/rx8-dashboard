@@ -69,7 +69,7 @@ class SettingsCodecTest {
         assertEquals(Rx8Series.S2_AUTO, SettingsCodec.decodeSeries("S2_AUTO"))
         assertEquals(Rx8Series.S1_6PORT, SettingsCodec.decodeSeries("garbage"))
         assertEquals(DashboardPalette.NIGHT_AMBER, SettingsCodec.decodePalette("NIGHT_AMBER"))
-        assertEquals(DashboardPalette.RENESIS_RED, SettingsCodec.decodePalette(null))
+        assertEquals(DashboardPalette.AURORA_BLUE, SettingsCodec.decodePalette(null))
     }
 
     @Test

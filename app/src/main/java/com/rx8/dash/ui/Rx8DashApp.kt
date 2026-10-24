@@ -58,7 +58,7 @@ fun Rx8DashApp(graph: AppGraph) {
     val session: SessionViewModel = viewModel(factory = SessionViewModel.Factory)
     val settings by session.settings.collectAsStateWithLifecycle()
     val s = settings
-    Rx8DashTheme(palette = s?.palette ?: DashboardPalette.RENESIS_RED) {
+    Rx8DashTheme(palette = s?.palette ?: DashboardPalette.AURORA_BLUE) {
         val c = LocalDashColors.current
         Surface(modifier = Modifier.fillMaxSize(), color = c.background) {
             Box(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
