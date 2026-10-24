@@ -25,6 +25,9 @@ import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
 
+/** Diagnostic switch. Set to false to remove every rotor drawing from the app without touching the call sites. */
+private const val ROTOR_ENABLED = false
+
 /**
  * A Wankel rotor turning inside its epitrochoid housing, the Renesis emblem.
  *
@@ -34,6 +37,7 @@ import kotlin.math.sin
  */
 @Composable
 fun RotorEmblem(rpm: Double?, modifier: Modifier = Modifier, tint: Color = LocalDashColors.current.accent) {
+    if (!ROTOR_ENABLED) return
     val rpmNow by rememberUpdatedState(rpm ?: 0.0)
     var angle by remember { mutableFloatStateOf(0f) }
     LaunchedEffect(Unit) {
