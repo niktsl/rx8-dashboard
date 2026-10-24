@@ -88,7 +88,10 @@ fun DashboardScreen(session: SessionViewModel, graph: AppGraph, modifier: Modifi
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             RotorEmblem(rpm = snap[Metric.RPM], modifier = Modifier.size(44.dp))
-            Text("RX-8", color = c.accent, fontWeight = FontWeight.ExtraBold, fontSize = 22.sp)
+            Column {
+                Text("MAZDA", color = c.text, fontWeight = FontWeight.Medium, fontSize = 11.sp, letterSpacing = 5.sp)
+                Text("RX-8", color = c.accent, fontWeight = FontWeight.ExtraBold, fontSize = 24.sp, letterSpacing = 2.sp)
+            }
             ConnectionChip(status = status, demo = s.demoMode)
             Spacer(Modifier.weight(1f))
             if (oil != null) WarningLight(label = "OIL PRESSURE", on = oil < 0.5)

@@ -33,6 +33,7 @@ import com.rx8.dash.data.AppSettings
 import com.rx8.dash.data.DashboardPalette
 import com.rx8.dash.data.KnobAction
 import com.rx8.dash.service.ServiceStarter
+import com.rx8.dash.ui.components.IntroSplash
 import com.rx8.dash.ui.components.LoadingBox
 import com.rx8.dash.ui.knob.knobInput
 import com.rx8.dash.ui.knob.rememberKnobAccumulator
@@ -60,13 +61,18 @@ fun Rx8DashApp(graph: AppGraph) {
     val s = settings
     Rx8DashTheme(palette = s?.palette ?: DashboardPalette.AURORA_BLUE) {
         val c = LocalDashColors.current
+        var showIntro by rememberSaveable { mutableStateOf(true) }
         Surface(modifier = Modifier.fillMaxSize(), color = c.background) {
-            Box(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
-                if (s == null) {
-                    LoadingBox()
-                } else {
-                    AppContent(session = session, graph = graph, s = s)
+            Box(modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
+                    if (s == null) {
+                        LoadingBox()
+                    } else {
+                        AppContent(session = session, graph = graph, s = s)
+                    }
                 }
+                // The dashboard composes underneath, so it is ready when the intro fades out.
+                if (showIntro) IntroSplash(onFinished = { showIntro = false })
             }
         }
     }

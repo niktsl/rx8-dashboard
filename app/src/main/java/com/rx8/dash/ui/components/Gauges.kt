@@ -82,7 +82,6 @@ fun TachometerGauge(
     val overRed = rpm != null && rpm >= redlineRpm
 
     Box(modifier = modifier.aspectRatio(1f), contentAlignment = Alignment.Center) {
-        RotorEmblem(rpm = rpm, modifier = Modifier.fillMaxSize(0.56f))
         Canvas(modifier = Modifier.fillMaxSize()) {
             val d = min(size.width, size.height)
             val stroke = d * 0.06f
