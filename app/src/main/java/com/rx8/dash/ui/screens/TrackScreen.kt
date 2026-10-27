@@ -36,7 +36,7 @@ import com.rx8.dash.ui.components.ConnectionChip
 import com.rx8.dash.ui.components.Fmt
 import com.rx8.dash.ui.components.LayoutSwitchChip
 import com.rx8.dash.ui.components.SegmentedBar
-import com.rx8.dash.ui.components.TachometerGauge
+import com.rx8.dash.ui.components.QuarterRpmGauge
 import com.rx8.dash.ui.components.WarningLight
 import com.rx8.dash.ui.components.fraction
 import com.rx8.dash.ui.theme.LocalDashColors
@@ -195,10 +195,10 @@ fun TrackScreen(session: SessionViewModel, graph: AppGraph, modifier: Modifier =
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    TachometerGauge(
+                    QuarterRpmGauge(
                         rpm = rpm,
                         redlineRpm = s.redlineRpm,
-                        modifier = Modifier.fillMaxHeight(),
+                        modifier = Modifier.fillMaxSize(),
                         coldLimitRpm = if (stage == WarmupStage.READY) null else monitor.config.coldRpmLimit,
                     )
                 }
