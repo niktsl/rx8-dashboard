@@ -60,6 +60,7 @@ class SettingsRepository(context: Context) {
         val FUEL_DENSITY = doublePreferencesKey("fuel_density")
         val FUEL_CALIBRATION = doublePreferencesKey("fuel_calibration")
         val PALETTE = stringPreferencesKey("palette")
+        val DASH_LAYOUT = stringPreferencesKey("dash_layout")
         val GAUGE_SLOTS = stringPreferencesKey("gauge_slots")
         val INITIAL_CONNECT_DELAY_MS = longPreferencesKey("initial_connect_delay_ms")
         val KEY_MAP = stringPreferencesKey("key_map")
@@ -79,6 +80,7 @@ class SettingsRepository(context: Context) {
             fuelDensity = p[Keys.FUEL_DENSITY] ?: defaults.fuelDensity,
             fuelCalibration = p[Keys.FUEL_CALIBRATION] ?: defaults.fuelCalibration,
             palette = SettingsCodec.decodePalette(p[Keys.PALETTE]),
+            dashLayout = SettingsCodec.decodeLayout(p[Keys.DASH_LAYOUT]),
             gaugeSlots = SettingsCodec.decodeGaugeSlots(p[Keys.GAUGE_SLOTS]),
             initialConnectDelayMs = p[Keys.INITIAL_CONNECT_DELAY_MS] ?: defaults.initialConnectDelayMs,
             keyMap = SettingsCodec.decodeKeyMap(p[Keys.KEY_MAP]),
@@ -96,6 +98,7 @@ class SettingsRepository(context: Context) {
         p[Keys.FUEL_DENSITY] = s.fuelDensity
         p[Keys.FUEL_CALIBRATION] = s.fuelCalibration
         p[Keys.PALETTE] = s.palette.name
+        p[Keys.DASH_LAYOUT] = s.dashLayout.name
         p[Keys.GAUGE_SLOTS] = SettingsCodec.encodeGaugeSlots(s.gaugeSlots)
         p[Keys.INITIAL_CONNECT_DELAY_MS] = s.initialConnectDelayMs
         p[Keys.KEY_MAP] = SettingsCodec.encodeKeyMap(s.keyMap)

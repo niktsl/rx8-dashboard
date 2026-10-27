@@ -70,6 +70,9 @@ class SettingsCodecTest {
         assertEquals(Rx8Series.S1_6PORT, SettingsCodec.decodeSeries("garbage"))
         assertEquals(DashboardPalette.NIGHT_AMBER, SettingsCodec.decodePalette("NIGHT_AMBER"))
         assertEquals(DashboardPalette.AURORA_BLUE, SettingsCodec.decodePalette(null))
+        assertEquals(DashLayout.TRACK, SettingsCodec.decodeLayout("TRACK"))
+        assertEquals(DashLayout.GAUGES, SettingsCodec.decodeLayout(null))
+        assertEquals(DashLayout.GAUGES, SettingsCodec.decodeLayout("garbage"))
     }
 
     @Test

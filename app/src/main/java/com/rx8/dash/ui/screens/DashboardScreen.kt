@@ -41,10 +41,12 @@ import com.rx8.dash.core.Metric
 import com.rx8.dash.core.health.RotaryHealthMonitor
 import com.rx8.dash.core.health.WarmupStage
 import com.rx8.dash.data.AppSettings
+import com.rx8.dash.data.DashLayout
 import com.rx8.dash.ui.components.AlertBanner
 import com.rx8.dash.ui.components.ArcGauge
 import com.rx8.dash.ui.components.ConnectionChip
 import com.rx8.dash.ui.components.Fmt
+import com.rx8.dash.ui.components.LayoutSwitchChip
 import com.rx8.dash.ui.components.MediaMiniPanel
 import com.rx8.dash.ui.components.RotorEmblem
 import com.rx8.dash.ui.components.TachometerGauge
@@ -95,6 +97,7 @@ fun DashboardScreen(session: SessionViewModel, graph: AppGraph, modifier: Modifi
             ConnectionChip(status = status, demo = s.demoMode)
             Spacer(Modifier.weight(1f))
             if (oil != null) WarningLight(label = "OIL PRESSURE", on = oil < 0.5)
+            LayoutSwitchChip(label = "TRACK", onClick = { session.update { it.copy(dashLayout = DashLayout.TRACK) } })
         }
         AlertBanner(alerts = alerts)
 
@@ -202,7 +205,7 @@ fun DashboardScreen(session: SessionViewModel, graph: AppGraph, modifier: Modifi
 }
 
 @Composable
-private fun WarmupStrip(stage: WarmupStage, coolantC: Double?, coldLimitRpm: Int, modifier: Modifier = Modifier) {
+internal fun WarmupStrip(stage: WarmupStage, coolantC: Double?, coldLimitRpm: Int, modifier: Modifier = Modifier) {
     val c = LocalDashColors.current
     val stages = listOf(
         Triple(WarmupStage.COLD, "COLD", c.info),

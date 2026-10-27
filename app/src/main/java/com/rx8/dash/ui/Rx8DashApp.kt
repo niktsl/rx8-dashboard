@@ -30,6 +30,7 @@ import com.rx8.dash.AppGraph
 import com.rx8.dash.bt.BluetoothDevices
 import com.rx8.dash.core.ConnectionState
 import com.rx8.dash.data.AppSettings
+import com.rx8.dash.data.DashLayout
 import com.rx8.dash.data.DashboardPalette
 import com.rx8.dash.data.KnobAction
 import com.rx8.dash.service.ServiceStarter
@@ -45,6 +46,7 @@ import com.rx8.dash.ui.screens.MaintenanceScreen
 import com.rx8.dash.ui.screens.OnboardingScreen
 import com.rx8.dash.ui.screens.RotaryHealthScreen
 import com.rx8.dash.ui.screens.SettingsScreen
+import com.rx8.dash.ui.screens.TrackScreen
 import com.rx8.dash.ui.screens.TripsScreen
 import com.rx8.dash.ui.theme.LocalDashColors
 import com.rx8.dash.ui.theme.Rx8DashTheme
@@ -199,7 +201,12 @@ private fun AppContent(session: SessionViewModel, graph: AppGraph, s: AppSetting
         )
         Box(modifier = Modifier.weight(1f).fillMaxHeight()) {
             when (tabs[selectedIdx]) {
-                AppTab.DASHBOARD -> DashboardScreen(session = session, graph = graph)
+                AppTab.DASHBOARD ->
+                    if (s.dashLayout == DashLayout.TRACK) {
+                        TrackScreen(session = session, graph = graph)
+                    } else {
+                        DashboardScreen(session = session, graph = graph)
+                    }
                 AppTab.HEALTH -> RotaryHealthScreen(session = session)
                 AppTab.TRIPS -> TripsScreen(session = session)
                 AppTab.DIAGNOSTICS -> DiagnosticsScreen(session = session)

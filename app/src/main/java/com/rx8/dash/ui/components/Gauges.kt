@@ -58,7 +58,7 @@ import kotlin.math.sin
 private const val START_ANGLE = 135f
 private const val SWEEP = 270f
 
-private fun fraction(v: Double, min: Double, max: Double): Float {
+internal fun fraction(v: Double, min: Double, max: Double): Float {
     if (max <= min || v.isNaN()) return 0f
     return ((v - min) / (max - min)).toFloat().coerceIn(0f, 1f)
 }
@@ -174,7 +174,7 @@ fun TachometerGauge(
 }
 
 /** True when [value] is in a range worth flagging in red (high speed, hot coolant, bad battery voltage). */
-private fun isDanger(metric: Metric, value: Double, frac: Float): Boolean = when (metric) {
+internal fun isDanger(metric: Metric, value: Double, frac: Float): Boolean = when (metric) {
     Metric.COOLANT -> value >= 105.0
     Metric.INTAKE_AIR -> value >= 60.0
     Metric.VOLTAGE -> value < 12.0 || value > 15.0

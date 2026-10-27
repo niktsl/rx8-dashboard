@@ -17,6 +17,12 @@ enum class DashboardPalette(val label: String) {
     CLASSIC_WHITE("Classic white"),
 }
 
+/** Main dashboard layouts. */
+enum class DashLayout(val label: String) {
+    GAUGES("Gauges"),
+    TRACK("Track"),
+}
+
 /**
  * Android keycode values (android.view.KeyEvent) duplicated as plain constants so the settings codec stays pure
  * Kotlin and can be unit-tested on the JVM without Android stubs.
@@ -45,6 +51,7 @@ data class AppSettings(
     val fuelCalibration: Double = 1.0,
     // Display
     val palette: DashboardPalette = DashboardPalette.AURORA_BLUE,
+    val dashLayout: DashLayout = DashLayout.GAUGES,
     val gaugeSlots: List<Metric> = DEFAULT_GAUGE_SLOTS,
     // Connection timing
     val initialConnectDelayMs: Long = 3000L,
@@ -138,6 +145,8 @@ object SettingsCodec {
     }
 
     fun decodeSeries(raw: String?): Rx8Series = raw?.let { enumOrNull<Rx8Series>(it) } ?: Rx8Series.S1_6PORT
+
+    fun decodeLayout(raw: String?): DashLayout = raw?.let { enumOrNull<DashLayout>(it) } ?: DashLayout.GAUGES
 
     fun decodePalette(raw: String?): DashboardPalette =
         raw?.let { enumOrNull<DashboardPalette>(it) } ?: DashboardPalette.AURORA_BLUE

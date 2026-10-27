@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.rx8.dash.core.Rx8Series
 import com.rx8.dash.data.AppSettings
+import com.rx8.dash.data.DashLayout
 import com.rx8.dash.data.DashboardPalette
 import com.rx8.dash.data.KnobAction
 import com.rx8.dash.ui.components.BigButton
@@ -201,6 +202,21 @@ fun SettingsScreen(session: SessionViewModel, modifier: Modifier = Modifier) {
         SectionLabel("DISPLAY")
         DashCard {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text("Dashboard layout", color = c.text, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                for (l in DashLayout.values()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(min = 56.dp)
+                            .focusRing(RoundedCornerShape(12.dp))
+                            .clickable { vm.update { it.copy(dashLayout = l) } },
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(selected = l == s.dashLayout, onClick = null)
+                        Spacer(Modifier.width(12.dp))
+                        Text(l.label, color = c.text, fontSize = 18.sp)
+                    }
+                }
                 Text("Palette", color = c.text, fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 for (p in DashboardPalette.values()) {
                     PaletteRow(palette = p, selected = p == s.palette, onClick = { vm.update { it.copy(palette = p) } })
